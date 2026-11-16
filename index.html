@@ -18,6 +18,8 @@
       --accent-soft: rgba(16, 185, 129, 0.14);
       --gold: #f59e0b;
       --gold-soft: rgba(245, 158, 11, 0.14);
+      --blue: #38bdf8;
+      --blue-soft: rgba(56, 189, 248, 0.14);
       --danger: #ef4444;
       --radius: 16px;
     }
@@ -36,7 +38,7 @@
 
     .app {
       width: 100%;
-      max-width: 940px;
+      max-width: 960px;
       display: grid;
       grid-template-columns: 1fr 1.15fr;
       gap: 20px;
@@ -52,6 +54,43 @@
       padding: 22px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.35);
     }
+
+    /* TV Mode Smartboard Layout */
+    body.tv-mode {
+      padding: 0;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      background: #06080c;
+    }
+    body.tv-mode .app {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      max-width: 100%;
+    }
+    body.tv-mode .card.hero {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: radial-gradient(circle at center, #131822 0%, #06080c 100%);
+    }
+    body.tv-mode .ring-wrap { width: 310px; height: 310px; margin: 18px 0 24px; }
+    body.tv-mode .timer-big { font-size: 3.6rem; }
+    body.tv-mode .timer-sub { font-size: 1rem; }
+    body.tv-mode .current-title { font-size: 2.2rem; }
+    body.tv-mode .current-meta { font-size: 1.25rem; }
+    body.tv-mode .pill { font-size: 1rem; padding: 8px 16px; }
+    body.tv-mode .topbar,
+    body.tv-mode .command-bar,
+    body.tv-mode .card:not(.hero),
+    body.tv-mode .footer-note,
+    body.tv-mode .welcome-banner { display: none !important; }
 
     .welcome-banner {
       grid-column: 1 / -1;
@@ -80,19 +119,21 @@
       padding: 16px 22px;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
     .badge-day {
       font-weight: 800;
-      font-size: 0.88rem;
-      padding: 6px 12px;
+      font-size: 0.85rem;
+      padding: 5px 11px;
       border-radius: 999px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
     .badge-a { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(16,185,129,0.4); }
     .badge-b { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(245,158,11,0.4); }
+    .badge-work { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(56,189,248,0.4); }
     .badge-off { background: rgba(148,163,184,0.15); color: var(--muted); border: 1px solid var(--border); }
+    .badge-role { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); font-size: 0.78rem; padding: 4px 10px; border-radius: 999px; font-weight: 600; }
 
     .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
@@ -112,8 +153,28 @@
 
     button.primary { background: var(--accent); color: #052e16; font-weight: 700; border: none; }
     button.primary:hover { filter: brightness(1.08); }
+    button.tv-btn { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); font-weight: 700; }
     button.notif-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
+    /* Command & Outlook Bar */
+    .command-bar {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .command-group { display: flex; flex: 1; min-width: 280px; gap: 8px; align-items: center; }
+    .command-group input[type="text"] { flex: 1; min-width: 180px; cursor: text; }
+    .cmd-feedback { width: 100%; font-size: 0.8rem; color: var(--accent); display: none; }
+    .cmd-feedback.show { display: block; }
+
+    /* Hero Ring */
     .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 22px; }
 
     .ring-wrap { position: relative; width: 230px; height: 230px; margin: 10px 0 18px; }
@@ -135,6 +196,7 @@
     .pill-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     .pill { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 0.8rem; color: var(--muted); }
 
+    /* Timeline */
     .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .timeline-header h2 { font-size: 1.05rem; }
     .period-list { display: flex; flex-direction: column; gap: 10px; }
@@ -157,8 +219,9 @@
 
     .footer-note { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.78rem; margin-top: 4px; }
 
+    /* Modals */
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.78);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.82);
       display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
     }
     .modal-backdrop.open { display: flex; }
@@ -166,6 +229,15 @@
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; padding: 24px;
     }
+    .modal.role-card { max-width: 440px; text-align: center; }
+
+    .role-btn {
+      width: 100%; padding: 16px; font-size: 1.05rem; font-weight: 700; margin: 8px 0;
+      border-radius: 12px; background: var(--surface-2); border: 2px solid var(--border);
+      color: var(--text); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .role-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+
     .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; flex-wrap: wrap; }
     .tab-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
     .tab-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
@@ -200,17 +272,31 @@
 </head>
 <body>
 
+<!-- First-Time Role Selector Modal -->
+<div id="roleModal" class="modal-backdrop">
+  <div class="modal role-card">
+    <h2 style="margin-bottom:6px;">Welcome to York Tech Bell</h2>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:18px;">
+      Choose your role to customize your schedule view. Saved strictly in your browser.
+    </p>
+    <button type="button" class="role-btn" onclick="chooseRole('student')">🎓 I am a Student</button>
+    <button type="button" class="role-btn" onclick="chooseRole('teacher')">🍎 I am a Teacher</button>
+  </div>
+</div>
+
 <div class="app">
+  <!-- First-Time Setup Prompt -->
   <div id="welcomeBanner" class="welcome-banner hidden">
     <div>
       <strong>👋 Welcome to York Tech Live Bell!</strong>
-      <span style="color:var(--muted); font-size:0.86rem; margin-left:6px;">
-        Set up your classes & lunch waves—saved strictly in your own browser.
+      <span id="welcomeHint" style="color:var(--muted); font-size:0.86rem; margin-left:6px;">
+        Add your classes & lunch waves—saved strictly in your own browser.
       </span>
     </div>
-    <button class="primary" onclick="openModal('classes')">Set Up My Classes</button>
+    <button class="primary" onclick="openModal('classes')">Set Up My Schedule</button>
   </div>
 
+  <!-- Top Controls -->
   <div class="topbar">
     <div class="brand">
       <div>
@@ -218,6 +304,7 @@
         <div id="dateSubtitle" style="font-size:0.82rem; color:var(--muted);">Loading date...</div>
       </div>
       <span id="dayBadge" class="badge-day badge-a">A DAY</span>
+      <span id="roleBadge" class="badge-role">🎓 Student</span>
     </div>
 
     <div class="controls">
@@ -238,14 +325,29 @@
         <option value="ADJ_LUNCH">Adjusted Lunches</option>
         <option value="VIRTUAL">Virtual Learning</option>
         <option value="MOD_VIRTUAL">Modified Virtual</option>
+        <option value="TEACHER_WORKDAY">Teacher In-Service / Act 80</option>
         <option value="NO_SCHOOL">No School</option>
       </select>
+      <button id="tvModeBtn" class="tv-btn" style="display:none;" onclick="openTVMode()" title="Open a clean popup window to drag onto your classroom smartboard">📺 TV Mode</button>
       <button id="installAppBtn" class="primary" style="display:none;">📲 Install App</button>
       <button id="notifToggleBtn" title="Toggle bell notifications">🔕 Alerts: Off</button>
       <button id="openSettings">⚙️ Settings</button>
     </div>
   </div>
 
+  <!-- Natural-Language Day-Off Shifter + Outlook Calendar Export -->
+  <div class="command-bar">
+    <div class="command-group">
+      <input type="text" id="dayCommandInput" placeholder='Type e.g. "We have off today", "We had off Monday", or "Undo today"' />
+      <button type="button" id="runCommandBtn" class="primary">Shift A/B</button>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button type="button" id="exportOutlookBtn" title="Downloads a free/transparent .ics file to import as a separate color-coded calendar in Outlook">📅 Export Outlook A/B (.ics)</button>
+    </div>
+    <div id="cmdFeedback" class="cmd-feedback"></div>
+  </div>
+
+  <!-- Left: Live Countdown Ring -->
   <div class="card hero">
     <div id="scheduleNameBadge" class="pill" style="margin-bottom:8px;">Regular Bell Schedule</div>
     <div class="ring-wrap">
@@ -268,6 +370,7 @@
     </div>
   </div>
 
+  <!-- Right: Full Day Schedule -->
   <div class="card">
     <div class="timeline-header">
       <h2>Today's Lineup</h2>
@@ -277,7 +380,7 @@
   </div>
 
   <div class="footer-note">
-    All classes, uploaded calendars, and alert settings save strictly in your own browser (`localStorage`). Install as an app for background notifications.
+    All classes, role preferences, day-off shifts, and calendars save strictly in your own browser (`localStorage`).
   </div>
 </div>
 
@@ -286,22 +389,24 @@
   <div class="modal">
     <div class="tab-bar">
       <button type="button" class="tab-btn active" data-tab="classes">📚 Classes & Lunches</button>
-      <button type="button" class="tab-btn" data-tab="calendar">📅 School Calendar Upload</button>
+      <button type="button" class="tab-btn" data-tab="calendar">📅 Calendar & Days Off</button>
       <button type="button" class="tab-btn" data-tab="alerts">🔔 Bell Alerts</button>
     </div>
 
+    <!-- TAB 1: Classes & Lunches -->
     <div id="tab-classes" class="tab-panel active">
-      <h3>My Classes & Lunch Waves</h3>
-      <p class="sub">Format as <strong>Class Name | Teacher / Room</strong>. Saves strictly to your browser.</p>
+      <h3 id="classesModalHeading">My Classes & Lunch Waves</h3>
+      <p id="classesModalSub" class="sub">Format as <strong>Class Name | Teacher / Room</strong>. Saves strictly to your browser.</p>
       <div class="form-grid" id="settingsForm"></div>
       <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" id="shareConfigBtn">🔗 Copy Class Share Link</button>
+        <button type="button" id="shareConfigBtn">🔗 Copy Schedule Share Link</button>
       </div>
     </div>
 
+    <!-- TAB 2: Upload / Edit Calendar & Unexpected Days Off -->
     <div id="tab-calendar" class="tab-panel">
-      <h3>Upload or Update School Calendar</h3>
-      <p class="sub">Upload a new York Tech calendar <strong>.pdf</strong>, <strong>.ics</strong>, or <strong>.json</strong> file, or edit dates manually below.</p>
+      <h3>School Calendar & Unexpected Days Off</h3>
+      <p class="sub">Upload a new York Tech calendar <strong>.pdf</strong>, <strong>.ics</strong>, or <strong>.json</strong> file, or manage holidays & Teacher In-Service days manually.</p>
 
       <div class="box-panel">
         <div style="font-weight:700; font-size:0.88rem;">📂 Upload New Calendar File (.pdf, .ics, .json)</div>
@@ -326,12 +431,22 @@
       </div>
 
       <div class="box-panel">
-        <div style="font-weight:700; font-size:0.88rem;">🚫 No-School / In-Service Dates (<span id="noSchoolCount">0</span>)</div>
+        <div style="font-weight:700; font-size:0.88rem;">🚫 Full School Closures / Holidays / Snow Days (<span id="noSchoolCount">0</span>)</div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <input type="date" id="newNoSchoolDate" />
-          <button type="button" id="addNoSchoolBtn">+ Add Day Off</button>
+          <button type="button" id="addNoSchoolBtn">+ Add Closure</button>
         </div>
         <div id="noSchoolList" class="tag-list"></div>
+      </div>
+
+      <div class="box-panel">
+        <div style="font-weight:700; font-size:0.88rem;">🍎 Teacher In-Service / Act 80 Days (<span id="teacherWorkCount">0</span>)</div>
+        <div style="font-size:0.78rem; color:var(--muted);">Students are off (A/B count skips these), while Teacher Mode shows the staff workday schedule.</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="date" id="newTeacherWorkDate" />
+          <button type="button" id="addTeacherWorkBtn">+ Add Teacher Workday</button>
+        </div>
+        <div id="teacherWorkList" class="tag-list"></div>
       </div>
 
       <div class="box-panel">
@@ -354,6 +469,7 @@
       </div>
     </div>
 
+    <!-- TAB 3: Notifications -->
     <div id="tab-alerts" class="tab-panel">
       <h3>Bell Notification Preferences</h3>
       <p class="sub">Install this page as a desktop or home-screen app for reliable background bell alerts.</p>
@@ -366,7 +482,10 @@
     </div>
 
     <div class="modal-actions">
-      <button type="button" id="resetDefaults" style="color:var(--danger);">Reset All Browser Data</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" onclick="switchRole()" style="color:var(--gold); border-color:var(--gold);">🔄 Switch Role (Sign Out)</button>
+        <button type="button" id="resetDefaults" style="color:var(--danger);">Reset All Data</button>
+      </div>
       <div style="display:flex; gap:8px;">
         <button type="button" id="closeSettings">Cancel</button>
         <button type="button" id="saveSettings" class="primary">Save to Browser</button>
@@ -377,8 +496,14 @@
 
 <script>
 /**
- * 0. PWA MANIFEST & SERVICE WORKER REGISTRATION
+ * 0. PWA MANIFEST, SERVICE WORKER & TV MODE CHECK
  */
+const urlParams = new URLSearchParams(window.location.search);
+const isTVMode = urlParams.get("tv") === "1";
+if (isTVMode) {
+  document.body.classList.add("tv-mode");
+}
+
 (function initPWA() {
   const manifest = {
     name: "York Tech Live Bell Schedule",
@@ -408,7 +533,7 @@ const installBtn = document.getElementById("installAppBtn");
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
-  installBtn.style.display = "inline-block";
+  if (!isTVMode) installBtn.style.display = "inline-block";
 });
 installBtn.addEventListener("click", async () => {
   if (!deferredInstallPrompt) return;
@@ -419,9 +544,9 @@ installBtn.addEventListener("click", async () => {
 });
 
 /**
- * 1. DEFAULT CALENDAR & BROWSER-ONLY STORAGE
+ * 1. DEFAULT 2026-27 CALENDAR (WITH SEPARATE TEACHER IN-SERVICE / ACT 80 DAYS)
  */
-const STORAGE_KEY = "yorkTechStudentConfig_v3";
+const STORAGE_KEY = "yorkTechUnifiedConfig_v7";
 
 const DEFAULT_CALENDAR = {
   yearLabel: "2026–2027",
@@ -429,13 +554,23 @@ const DEFAULT_CALENDAR = {
   schoolYearEnd: "2027-05-21",
   anchorDate: "2026-11-12",
   anchorLetter: "A",
+  // Days school & offices are closed for BOTH students and teachers
   noSchoolDates: [
-    "2026-09-04", "2026-09-07", "2026-10-12",
-    "2026-11-13", "2026-11-25", "2026-11-26", "2026-11-27", "2026-11-30",
+    "2026-09-04", "2026-09-07",
+    "2026-11-25", "2026-11-26", "2026-11-27", "2026-11-30",
     "2026-12-23", "2026-12-24", "2026-12-25", "2026-12-28", "2026-12-29", "2026-12-30", "2026-12-31",
-    "2027-01-01", "2027-01-11", "2027-01-12", "2027-01-18",
-    "2027-02-12", "2027-02-15",
-    "2027-03-05", "2027-03-25", "2027-03-26", "2027-03-29",
+    "2027-01-01", "2027-01-18",
+    "2027-02-15",
+    "2027-03-25", "2027-03-26", "2027-03-29"
+  ],
+  // Teacher In-Service / Act 80 Days: Teachers are IN, Students are OFF (skipped in A/B count)
+  teacherWorkDates: [
+    "2026-10-12",
+    "2026-11-13",
+    "2027-01-11",
+    "2027-01-12",
+    "2027-02-12",
+    "2027-03-05",
     "2027-04-30"
   ],
   specialBellDates: {
@@ -447,6 +582,7 @@ const DEFAULT_CALENDAR = {
 };
 
 const BLANK_TEMPLATE = {
+  role: null, // "student" | "teacher"
   configured: false,
   A1: "Period A1 | Tap 'Settings' to edit",
   A2: "Period A2 | Tap 'Settings' to edit",
@@ -467,10 +603,9 @@ const BLANK_TEMPLATE = {
 };
 
 function loadProfile() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has("cfg")) {
+  if (urlParams.has("cfg")) {
     try {
-      const decoded = JSON.parse(atob(params.get("cfg")));
+      const decoded = JSON.parse(atob(urlParams.get("cfg")));
       const merged = {
         ...BLANK_TEMPLATE,
         ...decoded,
@@ -484,7 +619,19 @@ function loadProfile() {
   }
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved) return { ...BLANK_TEMPLATE, ...saved, calendar: { ...DEFAULT_CALENDAR, ...(saved.calendar || {}) } };
+    if (saved) {
+      return {
+        ...BLANK_TEMPLATE,
+        ...saved,
+        calendar: {
+          ...DEFAULT_CALENDAR,
+          ...(saved.calendar || {}),
+          teacherWorkDates: (saved.calendar && Array.isArray(saved.calendar.teacherWorkDates))
+            ? saved.calendar.teacherWorkDates
+            : [...DEFAULT_CALENDAR.teacherWorkDates]
+        }
+      };
+    }
   } catch (e) {}
   return JSON.parse(JSON.stringify(BLANK_TEMPLATE));
 }
@@ -493,16 +640,227 @@ let userProfile = loadProfile();
 
 function saveProfileToBrowser() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
-  updateWelcomeBanner();
+  applyRoleUI();
   updateNotifButtonUI();
 }
 
-function updateWelcomeBanner() {
-  document.getElementById("welcomeBanner").classList.toggle("hidden", !!userProfile.configured);
+/**
+ * 2. ROLE MANAGEMENT & TV MODE POPUP
+ */
+function initRole() {
+  if (!userProfile.role && !isTVMode) {
+    document.getElementById("roleModal").classList.add("open");
+  }
+  applyRoleUI();
 }
 
+window.chooseRole = function(role) {
+  userProfile.role = role;
+  if (!userProfile.configured) {
+    const sub = role === "teacher" ? "Tap 'Settings' to add class & room" : "Tap 'Settings' to edit";
+    ["A1","A2","A3","A4","B1","B2","B3","B4"].forEach(p => {
+      userProfile[p] = `Period ${p} | ${sub}`;
+    });
+  }
+  saveProfileToBrowser();
+  document.getElementById("roleModal").classList.remove("open");
+  tick();
+};
+
+window.switchRole = function() {
+  userProfile.role = null;
+  saveProfileToBrowser();
+  document.getElementById("settingsModal").classList.remove("open");
+  document.getElementById("roleModal").classList.add("open");
+};
+
+function applyRoleUI() {
+  const isTeacher = userProfile.role === "teacher";
+  document.getElementById("roleBadge").textContent = isTeacher ? "🍎 Teacher" : "🎓 Student";
+  document.getElementById("tvModeBtn").style.display = (isTeacher && !isTVMode) ? "inline-block" : "none";
+  document.getElementById("welcomeHint").textContent = isTeacher
+    ? "Add your classes, room numbers, prep blocks & lunch waves—saved strictly in your browser."
+    : "Add your classes & lunch waves—saved strictly in your own browser.";
+  document.getElementById("welcomeBanner").classList.toggle("hidden", !!userProfile.configured || !userProfile.role || isTVMode);
+}
+
+window.openTVMode = function() {
+  window.open(
+    window.location.pathname + "?tv=1",
+    "YorkTechSmartboardTV",
+    "width=1000,height=720,popup=yes,menubar=no,toolbar=no,location=no,status=no"
+  );
+};
+
+window.addEventListener("storage", (e) => {
+  if (e.key === STORAGE_KEY) {
+    userProfile = loadProfile();
+    tick();
+  }
+});
+
 /**
- * 2. SERVICE WORKER / BROWSER NOTIFICATIONS
+ * 3. NATURAL LANGUAGE DAY-OFF PARSER & OUTLOOK .ICS GENERATOR
+ */
+function showCmdFeedback(msg, isError = false) {
+  const el = document.getElementById("cmdFeedback");
+  el.textContent = msg;
+  el.style.color = isError ? "var(--danger)" : "var(--accent)";
+  el.classList.add("show");
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove("show"), 7000);
+}
+
+function resolveDateFromPhrase(cmd) {
+  const now = new Date();
+  const base = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
+
+  if (cmd.includes("today")) return base;
+  if (cmd.includes("yesterday")) { base.setDate(base.getDate() - 1); return base; }
+  if (cmd.includes("tomorrow")) { base.setDate(base.getDate() + 1); return base; }
+
+  const isoMatch = cmd.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (isoMatch) return new Date(+isoMatch[1], +isoMatch[2] - 1, +isoMatch[3], 12, 0, 0);
+
+  const slashMatch = cmd.match(/(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/);
+  if (slashMatch) {
+    let yr = slashMatch[3] ? +slashMatch[3] : base.getFullYear();
+    if (yr < 100) yr += 2000;
+    return new Date(yr, +slashMatch[1] - 1, +slashMatch[2], 12, 0, 0);
+  }
+
+  const weekdays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  for (let i = 0; i < weekdays.length; i++) {
+    if (cmd.includes(weekdays[i])) {
+      const currentDow = base.getDay();
+      let diff = i - currentDow;
+      if (cmd.includes("next")) {
+        if (diff <= 0) diff += 7;
+      } else if (cmd.includes("last") || cmd.includes("had")) {
+        if (diff >= 0) diff -= 7;
+      } else {
+        if (diff > 3) diff -= 7;
+        if (diff < -3) diff += 7;
+      }
+      base.setDate(base.getDate() + diff);
+      return base;
+    }
+  }
+  return null;
+}
+
+function handleDayOffCommand() {
+  const input = document.getElementById("dayCommandInput");
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  const cmd = raw.toLowerCase();
+  const target = resolveDateFromPhrase(cmd);
+  if (!target) {
+    showCmdFeedback('Try: "We have off today", "We had off yesterday", "We had off Monday", or "Undo today".', true);
+    return;
+  }
+
+  const iso = toISO(target);
+  const pretty = target.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const cal = userProfile.calendar;
+  const isUndo = cmd.includes("undo") || cmd.includes("remove") || cmd.includes("cancel") || cmd.includes("nevermind");
+
+  if (isUndo) {
+    let removed = false;
+    if (cal.noSchoolDates.includes(iso)) {
+      cal.noSchoolDates = cal.noSchoolDates.filter(d => d !== iso);
+      removed = true;
+    }
+    if (cal.teacherWorkDates.includes(iso)) {
+      cal.teacherWorkDates = cal.teacherWorkDates.filter(d => d !== iso);
+      removed = true;
+    }
+    if (removed) {
+      saveProfileToBrowser();
+      tick();
+      showCmdFeedback(`↩️ Restored ${pretty} (${iso}) as a regular school day. A/B schedule updated.`);
+    } else {
+      showCmdFeedback(`${pretty} (${iso}) wasn't marked as a day off.`, true);
+    }
+  } else {
+    if (!cal.noSchoolDates.includes(iso)) {
+      cal.noSchoolDates.push(iso);
+      cal.noSchoolDates.sort();
+      cal.teacherWorkDates = cal.teacherWorkDates.filter(d => d !== iso);
+      saveProfileToBrowser();
+      tick();
+      showCmdFeedback(`✅ Marked ${pretty} (${iso}) as NO SCHOOL — all following A/B days shifted!`);
+    } else {
+      showCmdFeedback(`${pretty} (${iso}) is already marked as a day off.`);
+    }
+  }
+  input.value = "";
+}
+
+document.getElementById("runCommandBtn").addEventListener("click", handleDayOffCommand);
+document.getElementById("dayCommandInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleDayOffCommand();
+});
+
+function downloadOutlookICS() {
+  const cal = userProfile.calendar;
+  const isTeacher = userProfile.role === "teacher";
+  let ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//York Tech A/B Schedule//EN",
+    "CALSCALE:GREGORIAN",
+    "X-WR-CALNAME:York Tech A/B Days"
+  ];
+
+  let cur = parseISO(cal.schoolYearStart);
+  const end = parseISO(cal.schoolYearEnd);
+  let count = 0;
+
+  while (cur <= end && count < 400) {
+    const iso = toISO(cur);
+    const letter = getAutoDayLetter(iso);
+    const isWorkday = isTeacher && cal.teacherWorkDates.includes(iso);
+
+    if (letter === "A" || letter === "B" || isWorkday) {
+      const startCompact = iso.replace(/-/g, "");
+      const next = new Date(cur);
+      next.setDate(next.getDate() + 1);
+      const endCompact = toISO(next).replace(/-/g, "");
+      const special = cal.specialBellDates[iso];
+      const suffix = special ? ` (${BELL_SCHEDULES[special].name})` : "";
+      const summary = isWorkday ? "Teacher In-Service / Act 80 Day" : `${letter} Day${suffix}`;
+
+      ics.push(
+        "BEGIN:VEVENT",
+        `UID:yorktech-${startCompact}@ab-schedule`,
+        `DTSTART;VALUE=DATE:${startCompact}`,
+        `DTEND;VALUE=DATE:${endCompact}`,
+        `SUMMARY:${summary}`,
+        "TRANSP:TRANSPARENT",
+        "X-MICROSOFT-CDO-BUSYSTATUS:FREE",
+        "END:VEVENT"
+      );
+    }
+    cur.setDate(cur.getDate() + 1);
+    count++;
+  }
+
+  ics.push("END:VCALENDAR");
+
+  const blob = new Blob([ics.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `YorkTech_AB_Schedule_${cal.yearLabel || "Calendar"}.ics`;
+  a.click();
+  showCmdFeedback("📅 Downloaded YorkTech_AB_Schedule.ics (Free/Transparent so it won't block your Outlook Bookings).");
+}
+
+document.getElementById("exportOutlookBtn").addEventListener("click", downloadOutlookICS);
+
+/**
+ * 4. SERVICE WORKER / BROWSER NOTIFICATIONS
  */
 const firedAlerts = new Set();
 
@@ -579,7 +937,7 @@ function updateNotifButtonUI() {
 document.getElementById("notifToggleBtn").addEventListener("click", toggleNotifications);
 
 /**
- * 3. BELL SCHEDULES & CALENDAR LOGIC
+ * 5. ALL YORK TECH BELL SCHEDULES (INCLUDING TEACHER IN-SERVICE WORKDAY)
  */
 const BELL_SCHEDULES = {
   REGULAR: {
@@ -670,21 +1028,34 @@ const BELL_SCHEDULES = {
       { id: "P4", label: "Period 4", start: "11:15", end: "11:55" }
     ]
   },
+  TEACHER_WORKDAY: {
+    name: "Teacher In-Service / Act 80 Day",
+    blocks: [
+      { id: "AM_PD", label: "Morning In-Service / PD", start: "07:30", end: "11:30", note: "Students Off • Staff Professional Development" },
+      { id: "LUNCH", label: "Faculty Lunch", start: "11:30", end: "12:30", isLunch: true },
+      { id: "PM_PD", label: "Afternoon Work / Clerical", start: "12:30", end: "15:00", note: "Curriculum Planning & Classroom Prep" }
+    ]
+  },
   NO_SCHOOL: { name: "No School", blocks: [] }
 };
 
 function toISO(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 function parseISO(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 12, 0, 0); }
-function isSchoolDay(iso) {
+
+// Student instructional day check (skips both full closures AND teacher-only in-service days)
+function isStudentSchoolDay(iso) {
   const cal = userProfile.calendar;
   if (iso < cal.schoolYearStart || iso > cal.schoolYearEnd) return false;
   const dow = parseISO(iso).getDay();
   if (dow === 0 || dow === 6) return false;
-  return !cal.noSchoolDates.includes(iso);
+  if (cal.noSchoolDates.includes(iso)) return false;
+  if (cal.teacherWorkDates && cal.teacherWorkDates.includes(iso)) return false;
+  return true;
 }
+
 function getAutoDayLetter(targetISO) {
   const cal = userProfile.calendar;
-  if (!isSchoolDay(targetISO)) return null;
+  if (!isStudentSchoolDay(targetISO)) return null;
   if (targetISO === cal.anchorDate) return cal.anchorLetter;
   let count = 0;
   const step = targetISO > cal.anchorDate ? 1 : -1;
@@ -692,11 +1063,12 @@ function getAutoDayLetter(targetISO) {
   let guard = 0;
   while (toISO(cursor) !== targetISO && guard < 1500) {
     cursor.setDate(cursor.getDate() + step);
-    if (isSchoolDay(toISO(cursor))) count++;
+    if (isStudentSchoolDay(toISO(cursor))) count++;
     guard++;
   }
   return (count % 2 === 0) ? cal.anchorLetter : (cal.anchorLetter === "A" ? "B" : "A");
 }
+
 function timeToSec(hhmm) { const [h, m] = hhmm.split(":").map(Number); return h * 3600 + m * 60; }
 function format12(hhmm) { let [h, m] = hhmm.split(":").map(Number); const ampm = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; return `${h}:${String(m).padStart(2, "0")} ${ampm}`; }
 function formatCountdown(sec) {
@@ -722,14 +1094,22 @@ function buildTimeline(scheduleKey, dayLetter) {
     if (b.id === "INT") rawCourse = userProfile.INTERVISORY;
     const { title, teacher } = splitCourse(rawCourse);
 
-    if (b.lunches && b.lunches[lunchWave]) {
+    if (b.lunches && b.lunches[lunchWave] && lunchWave !== "NONE") {
       const lw = b.lunches[lunchWave];
       if (lw.start > b.start) expanded.push({ tag: `${letter}3 (Part 1)`, title, teacher, start: b.start, end: lw.start });
-      expanded.push({ tag: `${lunchWave} Lunch`, title: `Lunch (${lunchWave} Wave)`, teacher: "Cafeteria / Commons", start: lw.start, end: lw.end, isLunch: true });
+      expanded.push({
+        tag: `${lunchWave} Lunch`,
+        title: `Lunch (${lunchWave} Wave)`,
+        teacher: userProfile.role === "teacher" ? "Faculty / Lunch Break" : "Cafeteria / Commons",
+        start: lw.start,
+        end: lw.end,
+        isLunch: true
+      });
       if (lw.end < b.end) expanded.push({ tag: `${letter}3 (Part 2)`, title, teacher, start: lw.end, end: b.end });
     } else {
       const prefix = ["P1","P2","P3","P4"].includes(b.id) ? `${letter}${b.id.slice(1)}` : b.label;
-      expanded.push({ tag: prefix, title, teacher: b.note ? `${teacher} • ${b.note}` : teacher, start: b.start, end: b.end, isLunch: !!b.isLunch });
+      const metaText = (teacher && b.note) ? `${teacher} • ${b.note}` : (teacher || b.note || "");
+      expanded.push({ tag: prefix, title, teacher: metaText, start: b.start, end: b.end, isLunch: !!b.isLunch });
     }
   }
   return expanded;
@@ -754,7 +1134,7 @@ function checkScheduledAlerts(todayISO, nowSec, timeline) {
       triggerNotification(`${block.tag}: ${block.title} Started`, `Runs ${format12(block.start)} – ${format12(block.end)}`, `${todayISO}-start-${idx}`);
     }
     if (userProfile.bellStart && idx === timeline.length - 1 && nowSec === endSec) {
-      triggerNotification("Dismissal Bell!", "School day is complete. Have a great afternoon!", `${todayISO}-dismissal`);
+      triggerNotification("End of Day Bell!", "Schedule is complete. Have a great afternoon!", `${todayISO}-dismissal`);
     }
   });
 }
@@ -762,15 +1142,23 @@ function checkScheduledAlerts(todayISO, nowSec, timeline) {
 function tick() {
   const now = new Date();
   const todayISO = toISO(now);
-  const selectedISO = datePicker.value || todayISO;
+  const selectedISO = isTVMode ? todayISO : (datePicker.value || todayISO);
   const isToday = selectedISO === todayISO;
   const cal = userProfile.calendar;
+  const isTeacher = userProfile.role === "teacher";
+  const isTeacherWorkday = cal.teacherWorkDates && cal.teacherWorkDates.includes(selectedISO);
 
   let dayLetter = dayOverride.value === "AUTO" ? getAutoDayLetter(selectedISO) : dayOverride.value;
   let schedKey = scheduleOverride.value;
+
   if (schedKey === "AUTO") {
-    if (!isSchoolDay(selectedISO) && dayOverride.value === "AUTO") schedKey = "NO_SCHOOL";
-    else schedKey = cal.specialBellDates[selectedISO] || "REGULAR";
+    if (isTeacher && isTeacherWorkday && dayOverride.value === "AUTO") {
+      schedKey = "TEACHER_WORKDAY";
+    } else if (!isStudentSchoolDay(selectedISO) && dayOverride.value === "AUTO") {
+      schedKey = "NO_SCHOOL";
+    } else {
+      schedKey = cal.specialBellDates[selectedISO] || "REGULAR";
+    }
   }
 
   document.getElementById("dateSubtitle").textContent = parseISO(selectedISO).toLocaleDateString("en-US", {
@@ -778,7 +1166,10 @@ function tick() {
   });
 
   const badge = document.getElementById("dayBadge");
-  if (schedKey === "NO_SCHOOL" || !dayLetter) {
+  if (schedKey === "TEACHER_WORKDAY") {
+    badge.textContent = "IN-SERVICE DAY";
+    badge.className = "badge-day badge-work";
+  } else if (schedKey === "NO_SCHOOL" || !dayLetter) {
     badge.textContent = "NO SCHOOL";
     badge.className = "badge-day badge-off";
   } else {
@@ -786,9 +1177,14 @@ function tick() {
     badge.className = `badge-day ${dayLetter === "A" ? "badge-a" : "badge-b"}`;
   }
 
-  document.getElementById("scheduleNameBadge").textContent = BELL_SCHEDULES[schedKey].name;
+  document.getElementById("scheduleNameBadge").textContent =
+    (dayLetter && schedKey !== "NO_SCHOOL" && schedKey !== "TEACHER_WORKDAY")
+      ? `${dayLetter} Day • ${BELL_SCHEDULES[schedKey].name}`
+      : BELL_SCHEDULES[schedKey].name;
+
   const activeLunch = (dayLetter || "A") === "A" ? userProfile.LUNCH_A : userProfile.LUNCH_B;
-  document.getElementById("lunchPill").textContent = `Lunch: ${activeLunch} Wave`;
+  document.getElementById("lunchPill").textContent =
+    schedKey === "TEACHER_WORKDAY" ? "Students Off" : (activeLunch === "NONE" ? "Lunch: Full P3" : `Lunch: ${activeLunch} Wave`);
   document.getElementById("clockPill").textContent = `Now: ${now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })}`;
 
   const timeline = buildTimeline(schedKey, dayLetter);
@@ -796,7 +1192,7 @@ function tick() {
   const ring = document.getElementById("ringProgress");
   const circumference = 2 * Math.PI * 96;
 
-  if (isToday) {
+  if (isToday && !isTVMode) {
     const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
     checkScheduledAlerts(todayISO, nowSec, timeline);
   }
@@ -805,11 +1201,13 @@ function tick() {
     document.getElementById("schoolHoursLabel").textContent = "Day Off";
     document.getElementById("countdownText").textContent = "OFF";
     document.getElementById("countdownLabel").textContent = "No Classes";
-    document.getElementById("currentTitle").textContent = "No School Today";
-    document.getElementById("currentMeta").textContent = "Enjoy your day off, Spartan!";
+    document.getElementById("currentTitle").textContent = isTeacherWorkday ? "No School for Students" : "No School Today";
+    document.getElementById("currentMeta").textContent = isTeacherWorkday
+      ? "Teacher In-Service / Act 80 Day (Students Off)"
+      : "Enjoy your day off!";
     ring.style.strokeDashoffset = circumference;
     document.title = "No School • York Tech";
-    listEl.innerHTML = `<div class="period-item"><div class="p-left"><span class="p-name">No scheduled classes</span><span class="p-teacher">Use the Bell dropdown above to preview any schedule</span></div></div>`;
+    listEl.innerHTML = `<div class="period-item"><div class="p-left"><span class="p-name">No scheduled classes</span><span class="p-teacher">${isTeacherWorkday ? "Teacher In-Service Day (Switch to Teacher Role to view staff hours)" : "Use the Bell dropdown above to preview any schedule"}</span></div></div>`;
     return;
   }
 
@@ -818,9 +1216,9 @@ function tick() {
   let activeIdx = -1, state = "PREVIEW", remSec = 0, totalSec = 1, heroTitle = "", heroMeta = "", subLabel = "";
 
   if (!isToday) {
-    heroTitle = `${dayLetter} Day Preview`;
+    heroTitle = schedKey === "TEACHER_WORKDAY" ? "Teacher Workday Preview" : `${dayLetter} Day Preview`;
     heroMeta = `${timeline.length} scheduled blocks`;
-    document.getElementById("countdownText").textContent = `${dayLetter} DAY`;
+    document.getElementById("countdownText").textContent = schedKey === "TEACHER_WORKDAY" ? "STAFF" : `${dayLetter} DAY`;
     subLabel = "Previewing Date";
     ring.style.strokeDashoffset = 0;
   } else {
@@ -831,10 +1229,10 @@ function tick() {
       state = "BEFORE"; remSec = firstStart - nowSec; totalSec = Math.max(remSec, 1800);
       heroTitle = `Up Next: ${timeline[0].title}`;
       heroMeta = `${timeline[0].tag} starts at ${format12(timeline[0].start)}`;
-      subLabel = "Until 1st Bell"; ring.style.stroke = "var(--gold)";
+      subLabel = "Until Start"; ring.style.stroke = "var(--gold)";
     } else if (nowSec >= lastEnd) {
-      state = "AFTER"; heroTitle = "School Day Complete";
-      heroMeta = `Dismissed at ${format12(timeline[timeline.length - 1].end)}`;
+      state = "AFTER"; heroTitle = schedKey === "TEACHER_WORKDAY" ? "Workday Complete" : "School Day Complete";
+      heroMeta = `Ended at ${format12(timeline[timeline.length - 1].end)}`;
       document.getElementById("countdownText").textContent = "DONE";
       subLabel = "Have a great afternoon"; ring.style.stroke = "var(--accent)"; ring.style.strokeDashoffset = 0;
     } else {
@@ -845,7 +1243,7 @@ function tick() {
           heroTitle = timeline[i].title;
           heroMeta = `${timeline[i].tag} • Ends ${format12(timeline[i].end)}`;
           subLabel = "Left in Block";
-          ring.style.stroke = timeline[i].isLunch ? "var(--gold)" : "var(--accent)";
+          ring.style.stroke = timeline[i].isLunch ? "var(--gold)" : (schedKey === "TEACHER_WORKDAY" ? "var(--blue)" : "var(--accent)");
           break;
         }
         if (i < timeline.length - 1) {
@@ -887,7 +1285,7 @@ function tick() {
 }
 
 /**
- * 4. CALENDAR UPLOAD & SETTINGS MODAL
+ * 6. CALENDAR FILE PARSER (PDF, ICS, JSON) & SETTINGS MODAL
  */
 let draftCalendar = null;
 const MONTHS_MAP = { january:1, february:2, march:3, april:4, may:5, june:6, july:7, august:8, september:9, october:10, november:11, december:12 };
@@ -896,7 +1294,7 @@ function parseSchoolCalendarText(rawText) {
   const yrMatch = rawText.match(/(20\d{2})\s*[\/\-]\s*(\d{2,4})/);
   const startYear = yrMatch ? parseInt(yrMatch[1], 10) : new Date().getFullYear();
   const endYear = startYear + 1;
-  const noSchool = new Set(), special = {};
+  const noSchool = new Set(), teacherWork = new Set(), special = {};
   let firstDay = null, lastDay = null, currentMonth = null;
 
   for (const rawLine of rawText.replace(/\r/g, "\n").split("\n")) {
@@ -924,7 +1322,11 @@ function parseSchoolCalendarText(rawText) {
         const iso = `${yr}-${String(currentMonth).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
         if (desc.includes("1st day all students") || desc.includes("first day all students")) firstDay = iso;
         if (desc.includes("last day for students")) lastDay = iso;
-        if (desc.includes("school & offices closed") || desc.includes("school closed") || desc.includes("teacher in-service") || desc.includes("act 80")) noSchool.add(iso);
+        if (desc.includes("teacher in-service") || desc.includes("act 80")) {
+          teacherWork.add(iso);
+        } else if (desc.includes("school & offices closed") || desc.includes("school closed")) {
+          noSchool.add(iso);
+        }
         if (desc.includes("early dismissal")) special[iso] = "EARLY";
         if (desc.includes("2-hr delay") || desc.includes("two-hour delay") || desc.includes("2-hour delay")) special[iso] = "DELAY_2HR";
       }
@@ -937,12 +1339,14 @@ function parseSchoolCalendarText(rawText) {
     anchorDate: firstDay || `${startYear}-08-18`,
     anchorLetter: "A",
     noSchoolDates: Array.from(noSchool).sort(),
+    teacherWorkDates: Array.from(teacherWork).sort(),
     specialBellDates: special
   };
 }
 
 function parseICS(icsText) {
   const noSchool = new Set(draftCalendar.noSchoolDates);
+  const teacherWork = new Set(draftCalendar.teacherWorkDates || []);
   const special = { ...draftCalendar.specialBellDates };
   for (const ev of icsText.split("BEGIN:VEVENT").slice(1)) {
     const dtMatch = ev.match(/DTSTART(?:;[^:]*)?:(\d{4})(\d{2})(\d{2})/);
@@ -950,11 +1354,13 @@ function parseICS(icsText) {
     if (!dtMatch || !sumMatch) continue;
     const iso = `${dtMatch[1]}-${dtMatch[2]}-${dtMatch[3]}`;
     const summary = sumMatch[1].toLowerCase();
-    if (summary.includes("closed") || summary.includes("no school") || summary.includes("in-service") || summary.includes("act 80")) noSchool.add(iso);
+    if (summary.includes("in-service") || summary.includes("act 80")) teacherWork.add(iso);
+    else if (summary.includes("closed") || summary.includes("no school")) noSchool.add(iso);
     else if (summary.includes("early dismissal")) special[iso] = "EARLY";
     else if (summary.includes("delay")) special[iso] = "DELAY_2HR";
   }
   draftCalendar.noSchoolDates = Array.from(noSchool).sort();
+  draftCalendar.teacherWorkDates = Array.from(teacherWork).sort();
   draftCalendar.specialBellDates = special;
 }
 
@@ -965,8 +1371,9 @@ document.getElementById("calendarFileInput").addEventListener("change", async (e
   statusEl.textContent = "Reading calendar file...";
   try {
     if (file.name.endsWith(".json")) {
-      draftCalendar = { ...DEFAULT_CALENDAR, ...JSON.parse(await file.text()) };
-      statusEl.textContent = `✅ Loaded JSON calendar (${draftCalendar.noSchoolDates.length} days off). Click "Save to Browser" to apply.`;
+      const parsed = JSON.parse(await file.text());
+      draftCalendar = { ...DEFAULT_CALENDAR, ...parsed, teacherWorkDates: parsed.teacherWorkDates || [] };
+      statusEl.textContent = `✅ Loaded JSON calendar (${draftCalendar.noSchoolDates.length} closures, ${draftCalendar.teacherWorkDates.length} teacher workdays). Click "Save to Browser" to apply.`;
     } else if (file.name.endsWith(".ics")) {
       parseICS(await file.text());
       statusEl.textContent = `✅ Imported ICS events. Review dates below and click "Save to Browser".`;
@@ -983,7 +1390,7 @@ document.getElementById("calendarFileInput").addEventListener("change", async (e
         fullText += content.items.map(i => i.str).join("\n") + "\n";
       }
       draftCalendar = parseSchoolCalendarText(fullText);
-      statusEl.textContent = `✅ Parsed PDF (${draftCalendar.yearLabel}): found ${draftCalendar.noSchoolDates.length} no-school days & ${Object.keys(draftCalendar.specialBellDates).length} special bell days.`;
+      statusEl.textContent = `✅ Parsed PDF (${draftCalendar.yearLabel}): ${draftCalendar.noSchoolDates.length} closures, ${draftCalendar.teacherWorkDates.length} teacher in-service days.`;
     }
     renderCalendarEditor();
   } catch (err) {
@@ -1011,16 +1418,25 @@ function renderCalendarEditor() {
   document.getElementById("calEndInput").value = draftCalendar.schoolYearEnd;
   document.getElementById("calAnchorDateInput").value = draftCalendar.anchorDate;
   document.getElementById("calAnchorLetterInput").value = draftCalendar.anchorLetter;
+
   document.getElementById("noSchoolCount").textContent = draftCalendar.noSchoolDates.length;
   document.getElementById("noSchoolList").innerHTML = draftCalendar.noSchoolDates.map(d =>
     `<span class="date-chip">${d} <button type="button" onclick="removeNoSchool('${d}')">&times;</button></span>`
   ).join("");
+
+  const twDates = draftCalendar.teacherWorkDates || [];
+  document.getElementById("teacherWorkCount").textContent = twDates.length;
+  document.getElementById("teacherWorkList").innerHTML = twDates.map(d =>
+    `<span class="date-chip">${d} <button type="button" onclick="removeTeacherWork('${d}')">&times;</button></span>`
+  ).join("");
+
   document.getElementById("specialDatesList").innerHTML = Object.entries(draftCalendar.specialBellDates).sort().map(([d, type]) =>
     `<span class="date-chip">${d} (${type}) <button type="button" onclick="removeSpecialDate('${d}')">&times;</button></span>`
   ).join("");
 }
 
 window.removeNoSchool = (iso) => { draftCalendar.noSchoolDates = draftCalendar.noSchoolDates.filter(d => d !== iso); renderCalendarEditor(); };
+window.removeTeacherWork = (iso) => { draftCalendar.teacherWorkDates = (draftCalendar.teacherWorkDates || []).filter(d => d !== iso); renderCalendarEditor(); };
 window.removeSpecialDate = (iso) => { delete draftCalendar.specialBellDates[iso]; renderCalendarEditor(); };
 
 document.getElementById("addNoSchoolBtn").addEventListener("click", () => {
@@ -1028,6 +1444,18 @@ document.getElementById("addNoSchoolBtn").addEventListener("click", () => {
   if (val && !draftCalendar.noSchoolDates.includes(val)) {
     draftCalendar.noSchoolDates.push(val);
     draftCalendar.noSchoolDates.sort();
+    draftCalendar.teacherWorkDates = (draftCalendar.teacherWorkDates || []).filter(d => d !== val);
+    renderCalendarEditor();
+  }
+});
+
+document.getElementById("addTeacherWorkBtn").addEventListener("click", () => {
+  const val = document.getElementById("newTeacherWorkDate").value;
+  if (!draftCalendar.teacherWorkDates) draftCalendar.teacherWorkDates = [];
+  if (val && !draftCalendar.teacherWorkDates.includes(val)) {
+    draftCalendar.teacherWorkDates.push(val);
+    draftCalendar.teacherWorkDates.sort();
+    draftCalendar.noSchoolDates = draftCalendar.noSchoolDates.filter(d => d !== val);
     renderCalendarEditor();
   }
 });
@@ -1048,19 +1476,37 @@ function switchTab(tabName) {
 document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
 
 function openModal(initialTab = "classes") {
+  const isTeacher = userProfile.role === "teacher";
+  document.getElementById("classesModalHeading").textContent = isTeacher ? "My Teaching Schedule & Lunch" : "My Classes & Lunch Waves";
+  document.getElementById("classesModalSub").innerHTML = isTeacher
+    ? "Format as <strong>Class or Prep | Room #</strong> (e.g., <em>Algebra I | Room 204</em>). Saves strictly to your browser."
+    : "Format as <strong>Class Name | Teacher / Room</strong>. Saves strictly to your browser.";
+
+  const suffixLabel = isTeacher ? "Class / Prep | Room #" : "Class | Teacher";
   const fields = [
-    ["A1", "A1 Class | Teacher"], ["B1", "B1 Class | Teacher"],
-    ["A2", "A2 Class | Teacher"], ["B2", "B2 Class | Teacher"],
-    ["A3", "A3 Class | Teacher"], ["B3", "B3 Class | Teacher"],
-    ["A4", "A4 Class | Teacher"], ["B4", "B4 Class | Teacher"],
-    ["INTERVISORY", "Spartan Intervisory | Teacher"]
+    ["A1", `A1 ${suffixLabel}`], ["B1", `B1 ${suffixLabel}`],
+    ["A2", `A2 ${suffixLabel}`], ["B2", `B2 ${suffixLabel}`],
+    ["A3", `A3 ${suffixLabel}`], ["B3", `B3 ${suffixLabel}`],
+    ["A4", `A4 ${suffixLabel}`], ["B4", `B4 ${suffixLabel}`],
+    ["INTERVISORY", isTeacher ? "Spartan Intervisory | Room #" : "Spartan Intervisory | Teacher"]
   ];
+
+  const lunchOptions = isTeacher
+    ? ["A", "B", "C", "D", "NONE"]
+    : ["A", "B", "C", "D"];
+
+  const renderLunchOpt = (w, selected) => {
+    const label = w === "NONE" ? "Full Period 3 (No Split)" : `${w} Lunch`;
+    return `<option value="${w}" ${selected === w ? "selected" : ""}>${label}</option>`;
+  };
+
   form.innerHTML = fields.map(([key, label]) => `
     <div class="field"><label>${label}</label><input type="text" data-key="${key}" value="${userProfile[key].replace(/"/g, "&quot;")}" /></div>
   `).join("") + `
-    <div class="field"><label>A-Day Lunch Wave</label><select data-key="LUNCH_A">${["A","B","C","D"].map(w => `<option value="${w}" ${userProfile.LUNCH_A === w ? "selected" : ""}>${w} Lunch</option>`).join("")}</select></div>
-    <div class="field"><label>B-Day Lunch Wave</label><select data-key="LUNCH_B">${["A","B","C","D"].map(w => `<option value="${w}" ${userProfile.LUNCH_B === w ? "selected" : ""}>${w} Lunch</option>`).join("")}</select></div>
+    <div class="field"><label>A-Day Lunch Wave</label><select data-key="LUNCH_A">${lunchOptions.map(w => renderLunchOpt(w, userProfile.LUNCH_A)).join("")}</select></div>
+    <div class="field"><label>B-Day Lunch Wave</label><select data-key="LUNCH_B">${lunchOptions.map(w => renderLunchOpt(w, userProfile.LUNCH_B)).join("")}</select></div>
   `;
+
   draftCalendar = JSON.parse(JSON.stringify(userProfile.calendar));
   document.getElementById("uploadStatus").textContent = "";
   renderCalendarEditor();
@@ -1102,21 +1548,21 @@ document.getElementById("shareConfigBtn").addEventListener("click", () => {
   const payload = {};
   form.querySelectorAll("[data-key]").forEach(el => { payload[el.dataset.key] = el.value.trim(); });
   const shareUrl = `${window.location.origin}${window.location.pathname}?cfg=${encodeURIComponent(btoa(JSON.stringify(payload)))}`;
-  navigator.clipboard.writeText(shareUrl).then(() => alert("Shareable class link copied! Anyone who opens it saves these classes strictly into their own browser."));
+  navigator.clipboard.writeText(shareUrl).then(() => alert("Shareable schedule link copied! Anyone who opens it saves these classes strictly into their own browser."));
 });
 
 document.getElementById("resetDefaults").addEventListener("click", () => {
-  if (!confirm("Erase your saved classes, uploaded calendar, and alerts from this browser?")) return;
+  if (!confirm("Erase your saved classes, role, uploaded calendar, and alerts from this browser?")) return;
   localStorage.removeItem(STORAGE_KEY);
   userProfile = JSON.parse(JSON.stringify(BLANK_TEMPLATE));
-  updateWelcomeBanner();
+  modal.classList.remove("open");
+  initRole();
   updateNotifButtonUI();
-  openModal("classes");
   tick();
 });
 
 [datePicker, dayOverride, scheduleOverride].forEach(el => el.addEventListener("change", tick));
-updateWelcomeBanner();
+initRole();
 updateNotifButtonUI();
 tick();
 setInterval(tick, 1000);

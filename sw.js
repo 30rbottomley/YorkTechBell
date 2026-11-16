@@ -1,4 +1,4 @@
-const CACHE_NAME = "york-tech-bell-pwa-v1";
+const CACHE_NAME = "york-tech-bell-pwa-v3";
 const ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", (event) => {

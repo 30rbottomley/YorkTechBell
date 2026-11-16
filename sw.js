@@ -1,4 +1,4 @@
-const CACHE_NAME = "york-tech-bell-pwa-v3";
+const CACHE_NAME = "york-tech-bell-pwa-v4";
 const ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", (event) => {
@@ -13,6 +13,7 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (event.request.url.endsWith(".ics")) return;
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request))
   );

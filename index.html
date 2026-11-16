@@ -335,14 +335,15 @@
     </div>
   </div>
 
-  <!-- Natural-Language Day-Off Shifter + Outlook Calendar Export -->
+  <!-- Natural-Language Day-Off Shifter + Outlook Calendar Feed -->
   <div class="command-bar">
     <div class="command-group">
       <input type="text" id="dayCommandInput" placeholder='Type e.g. "We have off today", "We had off Monday", or "Undo today"' />
       <button type="button" id="runCommandBtn" class="primary">Shift A/B</button>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button type="button" id="exportOutlookBtn" title="Downloads a free/transparent .ics file to import as a separate color-coded calendar in Outlook">📅 Export Outlook A/B (.ics)</button>
+      <button type="button" id="copyFeedUrlBtn" title="Copy the live subscription link to paste into Outlook Web -> Add calendar -> Subscribe from web">🔗 Copy Outlook Feed URL</button>
+      <button type="button" id="exportOutlookBtn" title="Download schedule.ics to upload to your GitHub repo or import into Outlook">📅 Download schedule.ics</button>
     </div>
     <div id="cmdFeedback" class="cmd-feedback"></div>
   </div>
@@ -546,7 +547,7 @@ installBtn.addEventListener("click", async () => {
 /**
  * 1. DEFAULT 2026-27 CALENDAR (WITH SEPARATE TEACHER IN-SERVICE / ACT 80 DAYS)
  */
-const STORAGE_KEY = "yorkTechUnifiedConfig_v7";
+const STORAGE_KEY = "yorkTechUnifiedConfig_v8";
 
 const DEFAULT_CALENDAR = {
   yearLabel: "2026–2027",
@@ -554,7 +555,6 @@ const DEFAULT_CALENDAR = {
   schoolYearEnd: "2027-05-21",
   anchorDate: "2026-11-12",
   anchorLetter: "A",
-  // Days school & offices are closed for BOTH students and teachers
   noSchoolDates: [
     "2026-09-04", "2026-09-07",
     "2026-11-25", "2026-11-26", "2026-11-27", "2026-11-30",
@@ -563,7 +563,6 @@ const DEFAULT_CALENDAR = {
     "2027-02-15",
     "2027-03-25", "2027-03-26", "2027-03-29"
   ],
-  // Teacher In-Service / Act 80 Days: Teachers are IN, Students are OFF (skipped in A/B count)
   teacherWorkDates: [
     "2026-10-12",
     "2026-11-13",
@@ -582,7 +581,7 @@ const DEFAULT_CALENDAR = {
 };
 
 const BLANK_TEMPLATE = {
-  role: null, // "student" | "teacher"
+  role: null,
   configured: false,
   A1: "Period A1 | Tap 'Settings' to edit",
   A2: "Period A2 | Tap 'Settings' to edit",
@@ -700,7 +699,7 @@ window.addEventListener("storage", (e) => {
 });
 
 /**
- * 3. NATURAL LANGUAGE DAY-OFF PARSER & OUTLOOK .ICS GENERATOR
+ * 3. NATURAL LANGUAGE DAY-OFF PARSER & HOSTED OUTLOOK .ICS FEED
  */
 function showCmdFeedback(msg, isError = false) {
   const el = document.getElementById("cmdFeedback");
@@ -708,7 +707,7 @@ function showCmdFeedback(msg, isError = false) {
   el.style.color = isError ? "var(--danger)" : "var(--accent)";
   el.classList.add("show");
   clearTimeout(el._timer);
-  el._timer = setTimeout(() => el.classList.remove("show"), 7000);
+  el._timer = setTimeout(() => el.classList.remove("show"), 8000);
 }
 
 function resolveDateFromPhrase(cmd) {
@@ -803,15 +802,32 @@ document.getElementById("dayCommandInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") handleDayOffCommand();
 });
 
+function getMasterFeedURL() {
+  const basePath = window.location.pathname.endsWith("/")
+    ? window.location.pathname
+    : window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1);
+  return `${window.location.origin}${basePath}schedule.ics`;
+}
+
+document.getElementById("copyFeedUrlBtn").addEventListener("click", () => {
+  const feedUrl = getMasterFeedURL();
+  navigator.clipboard.writeText(feedUrl).then(() => {
+    showCmdFeedback(`🔗 Copied Outlook feed URL: ${feedUrl} — Paste this in Outlook Web → Add calendar → Subscribe from web.`);
+  }).catch(() => {
+    prompt("Copy this URL and paste it in Outlook Web → Add calendar → Subscribe from web:", feedUrl);
+  });
+});
+
 function downloadOutlookICS() {
   const cal = userProfile.calendar;
-  const isTeacher = userProfile.role === "teacher";
   let ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//York Tech A/B Schedule//EN",
     "CALSCALE:GREGORIAN",
-    "X-WR-CALNAME:York Tech A/B Days"
+    "METHOD:PUBLISH",
+    "X-WR-CALNAME:York Tech A/B Days",
+    "X-PUBLISHED-TTL:PT1H"
   ];
 
   let cur = parseISO(cal.schoolYearStart);
@@ -821,7 +837,7 @@ function downloadOutlookICS() {
   while (cur <= end && count < 400) {
     const iso = toISO(cur);
     const letter = getAutoDayLetter(iso);
-    const isWorkday = isTeacher && cal.teacherWorkDates.includes(iso);
+    const isWorkday = cal.teacherWorkDates && cal.teacherWorkDates.includes(iso);
 
     if (letter === "A" || letter === "B" || isWorkday) {
       const startCompact = iso.replace(/-/g, "");
@@ -830,11 +846,12 @@ function downloadOutlookICS() {
       const endCompact = toISO(next).replace(/-/g, "");
       const special = cal.specialBellDates[iso];
       const suffix = special ? ` (${BELL_SCHEDULES[special].name})` : "";
-      const summary = isWorkday ? "Teacher In-Service / Act 80 Day" : `${letter} Day${suffix}`;
+      const summary = isWorkday ? "Teacher In-Service (Students Off)" : `${letter} Day${suffix}`;
 
       ics.push(
         "BEGIN:VEVENT",
         `UID:yorktech-${startCompact}@ab-schedule`,
+        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
         `DTSTART;VALUE=DATE:${startCompact}`,
         `DTEND;VALUE=DATE:${endCompact}`,
         `SUMMARY:${summary}`,
@@ -852,9 +869,9 @@ function downloadOutlookICS() {
   const blob = new Blob([ics.join("\r\n")], { type: "text/calendar;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `YorkTech_AB_Schedule_${cal.yearLabel || "Calendar"}.ics`;
+  a.download = "schedule.ics";
   a.click();
-  showCmdFeedback("📅 Downloaded YorkTech_AB_Schedule.ics (Free/Transparent so it won't block your Outlook Bookings).");
+  showCmdFeedback("📅 Downloaded schedule.ics! Upload this file to your GitHub repo root to update everyone's Outlook subscription.");
 }
 
 document.getElementById("exportOutlookBtn").addEventListener("click", downloadOutlookICS);
@@ -1042,7 +1059,6 @@ const BELL_SCHEDULES = {
 function toISO(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 function parseISO(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 12, 0, 0); }
 
-// Student instructional day check (skips both full closures AND teacher-only in-service days)
 function isStudentSchoolDay(iso) {
   const cal = userProfile.calendar;
   if (iso < cal.schoolYearStart || iso > cal.schoolYearEnd) return false;
